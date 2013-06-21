@@ -25,6 +25,16 @@ if (Meteor.isServer) {
   Meteor.publish('tickets', function () {
     return cursor;
   });
+
+  Meteor.setInterval(function(){
+    var ticketNumber = Math.round(Math.random() * 99)
+    Tickets.insert({
+      subject: 'Ticket Order' + ticketNumber,
+      description: 'Some description for the ticket',
+      priority: ticketNumber
+    });
+  }, 2000);
+
 }
 /*****************************************************************************/
 
