@@ -103,5 +103,24 @@ if (Meteor.isClient) {
       return cursor;
     }
   });
+
+  //
+  // Ticket helpers & events
+  //
+
+  Template.ticket.events({
+    'click .card': function(event, template) {
+
+      if(!Session.get('stampedCard_' + this._id)) {
+        MyPackery.inst.stamp(template.firstNode);
+        Session.set('stampedCard_' + this._id, true);
+        console.log('... stamping: ' + this._id);
+      } else {
+        MyPackery.inst.unstamp(template.firstNode);
+        Session.set('stampedCard_' + this._id, false);
+        console.log('... unstamping: ' + this._id);
+      }
+    }
+  })
 }
 /*****************************************************************************/
