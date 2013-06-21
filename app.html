@@ -1,6 +1,7 @@
 <head>
   <title>Integrating 3rd Party UI Libraries</title>
-  <script src="http://packery.metafizzy.co/packery.pkgd.min.js"></script>
+  <script src="http://packery.metafizzy.co/packery.pkgd.js"></script>
+  <script src="http://draggabilly.desandro.com/draggabilly.pkgd.js"></script>
 </head>
 
 <body>
@@ -18,5 +19,7 @@
 <template name="ticket">
   <div id="{{_id}}" class="card">
     <h1>{{priority}}</h1>
+    <button class="draggie">[]</button>
+    <button class="stamp">][</button>
   </div>
 </template>

@@ -17,14 +17,26 @@ body {
   background: #f2f2f2;
   border: 1px solid #ccc;
   padding: 4px;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   text-align: center;
 }
 
 .card h1 {
-  line-height: 92px;
-  font-size: 82px;
+  line-height: 82px;
+  font-size: 62px;
   margin: 0;
   margin-top: 4px;
+}
+
+.card .draggie {
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+}
+
+.card .stamp {
+  position: absolute;
+  bottom: 1em;
+  left: 1em;
 }

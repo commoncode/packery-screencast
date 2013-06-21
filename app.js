@@ -33,7 +33,11 @@ if (Meteor.isServer) {
       description: 'Some description for the ticket',
       priority: ticketNumber
     });
-  }, 2000);
+
+    if(Tickets.find({}).count() > 40) {
+      seed();
+    }
+  }, 5000);
 
 }
 /*****************************************************************************/
@@ -55,7 +59,9 @@ if (Meteor.isClient) {
     init: _.once(function (container) {
       MyPackery.inst = new Packery(container, {
         itemSelector: '.card',
-        gutter: 10
+        gutter: 10,
+        columnWidth: 100,
+        rowHeight: 100
       });
     }),
 
@@ -78,6 +84,15 @@ if (Meteor.isClient) {
             self.inst.stamp(stampedElements);
 
           }
+
+          // Seems that we could bind draggie to only new elements
+          // but for now this works
+          for (var i = self.inst.getItemElements().length - 1; i >= 0; i--) {
+            self.draggie = new Draggabilly( self.inst.getItemElements()[i], {
+              handle: '.draggie'
+            });
+            self.inst.bindDraggabillyEvents( self.draggie );
+          };
 
           self.inst.layout();
         });
@@ -126,26 +141,14 @@ if (Meteor.isClient) {
   // Ticket helpers & events
   //
 
-  Template.ticket.preserve({
-    //
-    // Preserve the bubble element so we don't lose our
-    // position in the packery.
-    '.card': function (node) {
-      console.log('... ... ... preserving: ' + node.id);
-      return node.id;
-    }
-  });
-
   Template.ticket.events({
-    'click .card': function(event, template) {
+    'click .stamp': function(event, template) {
 
-      if(!Session.get('stampedCard_' + this._id)) {
+      if(!_.contains(MyPackery.inst.stampedElements, template.firstNode)) {
         MyPackery.inst.stamp(template.firstNode);
-        Session.set('stampedCard_' + this._id, true);
         console.log('... stamping: ' + this._id);
       } else {
         MyPackery.inst.unstamp(template.firstNode);
-        Session.set('stampedCard_' + this._id, false);
         console.log('... unstamping: ' + this._id);
       }
     }
