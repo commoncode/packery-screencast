@@ -39,6 +39,10 @@ if (Meteor.isServer) {
 /*****************************************************************************/
 
 /************************ Client *********************************************/
+
+
+
+
 if (Meteor.isClient) {
   var sub = Meteor.subscribe('tickets');
 
@@ -50,6 +54,7 @@ if (Meteor.isClient) {
     // once. Subsequent calls will just return.
     init: _.once(function (container) {
       MyPackery.inst = new Packery(container, {
+        itemSelector: '.card',
         gutter: 10
       });
     }),
@@ -60,7 +65,20 @@ if (Meteor.isClient) {
         // Wait until dependencies are flushed and then force a layout
         // on our packery instance
         Deps.afterFlush(function () {
+
           self.inst.reloadItems();
+
+          if(self.inst.stampedElements.length) {
+
+            // Seems to be necessary to unstamp and restamp elements
+            // being careful to take a cloned copy of the stampedElements
+            // Array, else we lose the references in the unstamping
+            var stampedElements = self.inst.stampedElements.slice(0)
+            self.inst.unstamp(self.inst.stampedElements);
+            self.inst.stamp(stampedElements);
+
+          }
+
           self.inst.layout();
         });
       }
@@ -107,6 +125,16 @@ if (Meteor.isClient) {
   //
   // Ticket helpers & events
   //
+
+  Template.ticket.preserve({
+    //
+    // Preserve the bubble element so we don't lose our
+    // position in the packery.
+    '.card': function (node) {
+      console.log('... ... ... preserving: ' + node.id);
+      return node.id;
+    }
+  });
 
   Template.ticket.events({
     'click .card': function(event, template) {
