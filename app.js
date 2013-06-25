@@ -151,7 +151,34 @@ if (Meteor.isClient) {
         MyPackery.inst.unstamp(template.firstNode);
         console.log('... unstamping: ' + this._id);
       }
+    },
+    'click .fitter': function(event, template) {
+      event.preventDefault();
+      if(template.firstNode.classList.contains('fit')){
+        console.log('... un-fitting');
+        template.firstNode.classList.remove('fit');
+        MyPackery.inst.unstamp(template.firstNode);
+        MyPackery.inst.layout();
+
+      } else {
+        console.log('... fitting');
+        template.firstNode.classList.add('fit')
+
+        fitCount = 0;
+        for (var i = MyPackery.inst.getItemElements().length - 1; i >= 0; i--) {
+          if(MyPackery.inst.getItemElements()[i].classList.contains('fit')){
+            fitCount++;
+          }
+        };
+        MyPackery.inst.fit(
+          template.firstNode,
+          (fitCount-1) * MyPackery.inst.columnWidth, 0);
+
+        MyPackery.inst.stamp(template.firstNode);
+      }
+
     }
+
   })
 }
 /*****************************************************************************/
